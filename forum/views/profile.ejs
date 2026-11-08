@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+<section class="section profile-page">
+  <div class="profile-card">
+    <% if (profile.avatar) { %><img class="avatar avatar-profile" src="<%= profile.avatar %>" alt="Avatar de <%= profile.username %>"><% } else { %><span class="avatar avatar-profile avatar-initial"><%= profile.username.slice(0, 1).toUpperCase() %></span><% } %>
+    <div class="profile-info"><span class="eyebrow"><span></span> MIEMBRO DE ZONA GAMERS</span><h1><%= profile.username %></h1><p><%= profile.bio || 'Este miembro todavía no ha agregado una biografía.' %></p><span class="profile-date">En la comunidad desde <%= formatDate(profile.created_at) %></span></div>
+    <% if (isOwnProfile) { %><a class="button button-outline button-small profile-edit" href="/perfil/editar">Editar perfil</a><% } %>
+  </div>
+  <div class="profile-stats"><div><strong><%= postCount %></strong><span>publicaciones</span></div><div><strong><%= commentCount %></strong><span>respuestas</span></div></div>
+  <div class="section-heading"><div><span class="eyebrow"><span></span> APORTES A LA COMUNIDAD</span><h2>Publicaciones</h2></div></div>
+  <% if (posts.length) { %><div class="post-grid"><% posts.forEach((post) => { %><%- include('partials/post-card', { post: { ...post, username: profile.username, avatar: profile.avatar } }) %><% }) %></div><% } else { %><div class="empty-state"><h3>Aún no hay publicaciones</h3><p>Las conversaciones que inicie este miembro aparecerán aquí.</p></div><% } %>
+</section>
+<%- include('partials/footer') %>

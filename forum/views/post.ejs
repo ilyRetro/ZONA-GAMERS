@@ -1,0 +1,20 @@
+<%- include('partials/header') %>
+<section class="section post-page">
+  <a class="back-link" href="/foros">← Volver a los foros</a>
+  <article class="post-detail">
+    <span class="tag"><%= post.category_name || 'Comunidad' %></span>
+    <h1><%= post.title %></h1>
+    <div class="post-meta post-detail-meta"><a class="member-link" href="/perfil/<%= encodeURIComponent(post.username) %>"><% if (post.avatar) { %><img class="avatar avatar-tiny" src="<%= post.avatar %>" alt=""><% } else { %><span class="avatar avatar-tiny avatar-initial"><%= post.username.slice(0, 1).toUpperCase() %></span><% } %><%= post.username %></a><time><%= formatDate(post.created_at) %></time></div>
+    <div class="post-content"><%= post.content %></div>
+  </article>
+  <section class="comments-section" id="comentarios">
+    <div class="section-heading"><div><span class="eyebrow"><span></span> CONVERSACIÓN</span><h2>Respuestas <span class="inline-count"><%= comments.length %></span></h2></div></div>
+    <% if (comments.length) { %><div class="comments-list"><% comments.forEach((comment) => { %>
+      <article class="comment-card"><div class="post-meta"><a class="member-link" href="/perfil/<%= encodeURIComponent(comment.username) %>"><% if (comment.avatar) { %><img class="avatar avatar-tiny" src="<%= comment.avatar %>" alt=""><% } else { %><span class="avatar avatar-tiny avatar-initial"><%= comment.username.slice(0, 1).toUpperCase() %></span><% } %><%= comment.username %></a><time><%= formatDate(comment.created_at) %></time></div><p><%= comment.content %></p></article>
+    <% }) %></div><% } else { %><p class="muted-copy">Todavía no hay respuestas. ¡Anímate a iniciar la conversación!</p><% } %>
+    <% if (currentUser) { %>
+      <form class="reply-form" action="/publicaciones/<%= post.id %>/comentarios" method="post"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><label for="comment-content">Tu respuesta</label><textarea id="comment-content" name="content" rows="4" minlength="2" maxlength="2000" required placeholder="Escribe una respuesta…"></textarea><button class="button button-small" type="submit">Enviar respuesta →</button></form>
+    <% } else { %><div class="reply-signin">¿Quieres responder? <a href="/login">Inicia sesión</a> o <a href="/registro">crea una cuenta</a>.</div><% } %>
+  </section>
+</section>
+<%- include('partials/footer') %>

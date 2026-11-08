@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+forum/node_modules/
+
+# Variables privadas
+.env
+.env.*
+!.env.example
+forum/.env
+forum/.env.*
+
+# Bases de datos SQLite
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Archivos temporales
+*.log
+.DS_Store
+Thumbs.db
+forum/database/*.db
+forum/database/*.db-shm
+forum/database/*.db-wal

@@ -1,0 +1,47 @@
+<% const pageTitle = typeof title === 'string' && title.trim() ? title.trim() : 'ZONA GAMERS'; %>
+<% const viewer = typeof currentUser === 'undefined' ? null : currentUser; %>
+<% const formToken = typeof csrfToken === 'string' ? csrfToken : ''; %>
+<% const successNotice = typeof notice === 'string' ? notice : ''; %>
+<% const errorNotice = typeof error === 'string' ? error : ''; %>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080b12">
+  <meta name="description" content="ZONA GAMERS: comunidad de American Truck Simulator, Euro Truck Simulator 2 y simulación de transporte.">
+  <title><%= pageTitle %> | ZONA GAMERS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/forum.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="ZONA GAMERS, inicio">
+      <img src="/assets/img/logo-zona-gamers.png" alt="">
+      <span>ZONA <strong>GAMERS</strong></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a href="/" class="<%= pageTitle === 'Inicio' ? 'active' : '' %>">Inicio</a>
+      <a href="/foros" class="<%= pageTitle === 'Foros' ? 'active' : '' %>">Foros</a>
+      <a href="/comunidad" class="<%= pageTitle === 'Comunidad' ? 'active' : '' %>">Comunidad</a>
+      <% if (viewer) { %>
+        <a class="nav-user" href="/perfil/<%= encodeURIComponent(viewer.username) %>">
+          <% if (viewer.avatar) { %><img class="avatar avatar-small" src="<%= viewer.avatar %>" alt=""><% } else { %><span class="avatar avatar-small avatar-initial"><%= viewer.username.slice(0, 1).toUpperCase() %></span><% } %>
+          <span><%= viewer.username %></span>
+        </a>
+        <form class="nav-logout" action="/logout" method="post">
+          <input type="hidden" name="_csrf" value="<%= formToken %>">
+          <button class="button button-quiet button-small" type="submit">Cerrar sesión</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Iniciar sesión</a>
+        <a class="button button-small" href="/registro">Registrarse</a>
+      <% } %>
+    </nav>
+  </header>
+  <main>
+    <% if (successNotice) { %><div class="flash flash-success" role="status"><%= successNotice %></div><% } %>
+    <% if (errorNotice) { %><div class="flash flash-error" role="alert"><%= errorNotice %></div><% } %>

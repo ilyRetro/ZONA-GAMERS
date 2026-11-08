@@ -1,0 +1,26 @@
+<%- include('partials/header') %>
+<section class="page-banner">
+  <span class="eyebrow"><span></span> LA COMUNIDAD CONVERSA</span>
+  <h1>Foros de <strong>ruta.</strong></h1>
+  <p>Encuentra tu próxima conversación, comparte lo que sabes y conecta con otros truckers.</p>
+  <% if (currentUser) { %><a class="button button-small" href="/publicaciones/nueva">＋ Nueva publicación</a><% } else { %><a class="button button-small" href="/registro">Únete para publicar</a><% } %>
+</section>
+<section class="section page-section">
+  <div class="section-heading"><div><span class="eyebrow"><span></span> EXPLORA POR TEMA</span><h2>Categorías</h2></div></div>
+  <div class="category-grid">
+    <% categories.forEach((category) => { %>
+      <a class="category-card <%= selectedCategory === category.id ? 'category-selected' : '' %>" href="/foros?categoria=<%= category.id %>">
+        <span class="category-icon"><%= category.icon %></span><span class="category-body"><strong><%= category.name %></strong><small><%= category.description %></small><span class="category-count"><%= category.post_count %> temas <i>·</i> <%= category.comment_count %> respuestas</span></span><span class="category-arrow">↗</span>
+        <% if (category.last_activity) { %><time class="category-time"><%= formatDate(category.last_activity) %></time><% } else { %><time class="category-time">Sin actividad todavía</time><% } %>
+      </a>
+    <% }) %>
+  </div>
+</section>
+<section class="section page-section section-top">
+  <div class="section-heading"><div><span class="eyebrow"><span></span> COMPARTE Y DESCUBRE</span><h2><%= selectedCategory ? 'Temas de esta categoría' : 'Publicaciones recientes' %></h2></div>
+    <% if (selectedCategory) { %><a class="text-link" href="/foros">Todas las categorías →</a><% } %>
+  </div>
+  <% if (posts.length) { %><div class="post-grid"><% posts.forEach((post) => { %><%- include('partials/post-card', { post }) %><% }) %></div>
+  <% } else { %><div class="empty-state"><span class="empty-icon">◈</span><h3>Aún no hay temas por aquí</h3><p>Inicia la conversación y ayuda a poner esta categoría en marcha.</p><% if (currentUser) { %><a class="button button-small" href="/publicaciones/nueva">Crear primer tema</a><% } else { %><a class="button button-small" href="/registro">Regístrate para publicar</a><% } %></div><% } %>
+</section>
+<%- include('partials/footer') %>

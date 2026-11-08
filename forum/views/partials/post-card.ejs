@@ -1,0 +1,15 @@
+<article class="post-card">
+  <div class="post-card-top">
+    <span class="tag"><%= post.category_name || 'Comunidad' %></span>
+    <time datetime="<%= post.created_at %>"><%= formatDate(post.created_at) %></time>
+  </div>
+  <h3><a href="/publicaciones/<%= post.id %>"><%= post.title %></a></h3>
+  <p class="post-excerpt"><%= post.content.length > 180 ? post.content.slice(0, 180) + '…' : post.content %></p>
+  <div class="post-meta">
+    <a class="member-link" href="/perfil/<%= encodeURIComponent(post.username) %>">
+      <% if (post.avatar) { %><img class="avatar avatar-tiny" src="<%= post.avatar %>" alt=""><% } else { %><span class="avatar avatar-tiny avatar-initial"><%= post.username.slice(0, 1).toUpperCase() %></span><% } %>
+      <%= post.username %>
+    </a>
+    <a class="comment-link" href="/publicaciones/<%= post.id %>#comentarios">◌ <%= post.comment_count %> respuestas</a>
+  </div>
+</article>

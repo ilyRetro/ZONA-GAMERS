@@ -1,0 +1,15 @@
+<%- include('partials/header') %>
+<section class="section form-page">
+  <a class="back-link" href="/perfil/<%= encodeURIComponent(user.username) %>">← Volver a mi perfil</a>
+  <div class="form-panel"><span class="eyebrow"><span></span> PERSONALIZA TU ESPACIO</span><h1>Editar perfil</h1><p class="muted-copy">Cuéntale a la comunidad un poco sobre ti.</p>
+    <form action="/perfil/editar" method="post" class="form-stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Nombre de usuario<input type="text" value="<%= user.username %>" disabled></label>
+      <label>Correo electrónico<input type="email" value="<%= user.email %>" disabled></label>
+      <label>Biografía<textarea name="bio" rows="5" maxlength="500" placeholder="¿Qué te gusta conducir?"><%= user.bio || '' %></textarea><small>Hasta 500 caracteres.</small></label>
+      <label>Avatar (URL HTTPS)<input name="avatar" type="url" maxlength="500" value="<%= user.avatar || '' %>" placeholder="https://ejemplo.com/mi-avatar.jpg"><small>Deja vacío para mostrar la inicial de tu usuario.</small></label>
+      <button class="button form-submit" type="submit">Guardar cambios <span>→</span></button>
+    </form>
+  </div>
+</section>
+<%- include('partials/footer') %>

@@ -1,0 +1,14 @@
+<%- include('partials/header') %>
+<section class="auth-wrap">
+  <div class="auth-aside"><span class="eyebrow"><span></span> BUENO TENERTE DE VUELTA</span><h1>La carretera<br>te <strong>llama.</strong></h1><p>Inicia sesión para continuar la conversación y compartir kilómetros con la comunidad.</p><div class="auth-aside-mark">ZG<span>.</span></div></div>
+  <div class="auth-card"><span class="eyebrow"><span></span> ACCESO A LA COMUNIDAD</span><h2>Iniciar sesión</h2><p class="muted-copy">Ingresa con tu usuario o correo electrónico.</p>
+    <form action="/login" method="post" class="form-stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Usuario o correo electrónico<input name="identity" type="text" autocomplete="username" required autofocus></label>
+      <label>Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
+      <button class="button form-submit" type="submit">Entrar a mi cuenta <span>→</span></button>
+    </form>
+    <p class="form-switch">¿Todavía no tienes cuenta? <a href="/registro">Regístrate gratis</a></p>
+  </div>
+</section>
+<%- include('partials/footer') %>

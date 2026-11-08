@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+<section class="auth-wrap">
+  <div class="auth-aside"><span class="eyebrow"><span></span> TU PRÓXIMA RUTA TE ESPERA</span><h1>Hazte parte<br>de la <strong>comunidad.</strong></h1><p>Crea tu cuenta para compartir tus historias, descubrir nuevos mods y encontrar compañeros de convoy.</p><div class="auth-aside-mark">ZG<span>.</span></div></div>
+  <div class="auth-card"><span class="eyebrow"><span></span> REGISTRO</span><h2>Crear cuenta</h2><p class="muted-copy">Únete gratis a ZONA GAMERS.</p>
+    <form action="/registro" method="post" class="form-stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Nombre de usuario<input name="username" type="text" minlength="3" maxlength="24" autocomplete="username" required pattern="[\p{L}\p{N}_-]{3,24}" title="Usa entre 3 y 24 letras, números, guiones o guiones bajos."></label>
+      <label>Correo electrónico<input name="email" type="email" maxlength="254" autocomplete="email" required></label>
+      <label>Contraseña<input name="password" type="password" minlength="10" maxlength="72" autocomplete="new-password" required><small>Al menos 10 caracteres y máximo 72 bytes.</small></label>
+      <label>Confirmar contraseña<input name="confirm_password" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label>
+      <label class="checkbox-label"><input type="checkbox" name="accept_rules" required><span>Acepto las normas de respeto y convivencia de la comunidad.</span></label>
+      <button class="button form-submit" type="submit">Crear mi cuenta <span>→</span></button>
+    </form>
+    <p class="form-switch">¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a></p>
+  </div>
+</section>
+<%- include('partials/footer') %>

@@ -1,0 +1,14 @@
+<%- include('partials/header') %>
+<section class="section form-page">
+  <a class="back-link" href="/foros">← Volver a los foros</a>
+  <div class="form-panel"><span class="eyebrow"><span></span> ABRE UNA CONVERSACIÓN</span><h1>Nueva publicación</h1><p class="muted-copy">Comparte una pregunta, un consejo o una historia de ruta.</p>
+    <form action="/publicaciones" method="post" class="form-stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>Categoría<select name="category_id" required><% categories.forEach((category) => { %><option value="<%= category.id %>"><%= category.name %></option><% }) %></select></label>
+      <label>Título<input name="title" type="text" minlength="5" maxlength="120" required placeholder="¿De qué quieres conversar?"></label>
+      <label>Contenido<textarea name="content" rows="9" minlength="10" maxlength="10000" required placeholder="Escribe los detalles de tu publicación…"></textarea><small>Entre 10 y 10.000 caracteres.</small></label>
+      <button class="button form-submit" type="submit">Publicar en los foros <span>→</span></button>
+    </form>
+  </div>
+</section>
+<%- include('partials/footer') %>

@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+<section class="home-hero">
+  <div class="hero-shade"></div>
+  <div class="hero-content">
+    <span class="eyebrow"><span></span> TRUCKERS LATINOAMÉRICA</span>
+    <h1>Tu próxima ruta<br>comienza <strong>aquí.</strong></h1>
+    <p>Un punto de encuentro para quienes viven la carretera. Comparte rutas, mods, convoyes y todo lo que hace grande a la simulación.</p>
+    <div class="hero-actions">
+      <a class="button" href="/foros">Explorar foros <span aria-hidden="true">→</span></a>
+      <% if (currentUser) { %><a class="button button-outline" href="/publicaciones/nueva">Crear publicación</a><% } else { %><a class="button button-outline" href="/registro">Unirme a la comunidad</a><% } %>
+    </div>
+    <div class="hero-stats">
+      <div><strong><%= stats.users %></strong><span>miembros</span></div>
+      <div><strong><%= stats.posts %></strong><span>publicaciones</span></div>
+      <div><strong><%= stats.online %></strong><span>en línea</span></div>
+    </div>
+  </div>
+  <div class="hero-caption"><span class="online-pulse"></span> COMUNIDAD EN RUTA</div>
+</section>
+
+<section class="section page-section">
+  <div class="section-heading">
+    <div><span class="eyebrow"><span></span> CONVERSACIONES RECIENTES</span><h2>Últimas publicaciones</h2></div>
+    <a class="text-link" href="/foros">Ver todos los foros <span>→</span></a>
+  </div>
+  <% if (recentPosts.length) { %>
+    <div class="post-grid"><% recentPosts.forEach((post) => { %><%- include('partials/post-card', { post }) %><% }) %></div>
+  <% } else { %>
+    <div class="empty-state"><span class="empty-icon">✦</span><h3>La carretera está despejada</h3><p>Sé el primero en iniciar una conversación con la comunidad.</p><% if (currentUser) { %><a class="button button-small" href="/publicaciones/nueva">Crear publicación</a><% } else { %><a class="button button-small" href="/registro">Únete y publica</a><% } %></div>
+  <% } %>
+</section>
+
+<section class="section activity-section">
+  <div class="section-heading"><div><span class="eyebrow"><span></span> EN MOVIMIENTO</span><h2>Actividad reciente</h2></div></div>
+  <% if (activity.length) { %>
+    <div class="activity-list"><% activity.forEach((item) => { %>
+      <a class="activity-item" href="/publicaciones/<%= item.post_id %>#comentarios">
+        <span class="activity-icon">↳</span><span><strong><%= item.username %></strong> respondió en <strong><%= item.title %></strong><small><%= item.content.length > 100 ? item.content.slice(0, 100) + '…' : item.content %></small></span><time><%= formatDate(item.created_at) %></time>
+      </a>
+    <% }) %></div>
+  <% } else { %><p class="muted-copy">Todavía no hay actividad. Las nuevas respuestas aparecerán aquí.</p><% } %>
+</section>
+<%- include('partials/footer') %>

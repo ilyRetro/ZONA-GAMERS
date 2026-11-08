@@ -1,0 +1,23 @@
+<%- include('partials/header') %>
+<section class="community-hero page-banner">
+  <span class="eyebrow"><span></span> MÁS QUE UNA COMUNIDAD</span>
+  <h1>Compartimos la misma <strong>ruta.</strong></h1>
+  <p>ZONA GAMERS reúne a jugadores latinoamericanos que disfrutan American Truck Simulator, Euro Truck Simulator 2 y los videojuegos de simulación. Compartimos conocimiento, organizamos convoyes y hacemos de cada viaje una experiencia en comunidad.</p>
+  <div class="hero-actions"><a class="button" href="https://discord.gg/4PCc3c7YtY" target="_blank" rel="noopener noreferrer">Unirme al Discord ↗</a><a class="button button-outline" href="/foros">Conocer los foros</a></div>
+</section>
+<section class="section page-section">
+  <div class="section-heading"><div><span class="eyebrow"><span></span> GENTE DE LA COMUNIDAD</span><h2>Miembros recientes</h2></div></div>
+  <% if (members.length) { %>
+    <div class="member-grid"><% members.forEach((member) => { %>
+      <a class="member-card" href="/perfil/<%= encodeURIComponent(member.username) %>">
+        <% if (member.avatar) { %><img class="avatar avatar-large" src="<%= member.avatar %>" alt=""><% } else { %><span class="avatar avatar-large avatar-initial"><%= member.username.slice(0, 1).toUpperCase() %></span><% } %>
+        <strong><%= member.username %></strong><small><%= member.post_count %> publicaciones</small><span class="member-bio"><%= member.bio || 'Miembro de ZONA GAMERS' %></span>
+      </a>
+    <% }) %></div>
+  <% } else { %><div class="empty-state"><h3>Tu comunidad te espera</h3><p>Aún no hay miembros registrados. Puedes ser el primero.</p><a class="button button-small" href="/registro">Crear cuenta</a></div><% } %>
+</section>
+<section class="section page-section section-top">
+  <div class="section-heading"><div><span class="eyebrow"><span></span> ÚLTIMAS CONVERSACIONES</span><h2>Lo que estamos hablando</h2></div><a class="text-link" href="/foros">Ir a los foros →</a></div>
+  <% if (recentPosts.length) { %><div class="post-grid"><% recentPosts.forEach((post) => { %><article class="post-card compact-post"><span class="tag"><%= post.category_name || 'Comunidad' %></span><h3><a href="/publicaciones/<%= post.id %>"><%= post.title %></a></h3><div class="post-meta"><a class="member-link" href="/perfil/<%= encodeURIComponent(post.username) %>"><%= post.username %></a><time><%= formatDate(post.created_at) %></time></div></article><% }) %></div><% } else { %><p class="muted-copy">Las publicaciones de los miembros aparecerán aquí.</p><% } %>
+</section>
+<%- include('partials/footer') %>
