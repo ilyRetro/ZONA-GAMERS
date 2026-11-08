@@ -1,0 +1,14 @@
+
+{
+  "name": "zona-gamers",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma y foro de la comunidad ZONA GAMERS",
+  "workspaces": [
+    "forum"
+  ],
+  "scripts": {
+    "start": "npm run start --workspace=forum",
+    "test": "npm test --workspace=forum"
+  }
+}
