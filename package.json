@@ -10,5 +10,8 @@
   "scripts": {
     "start": "npm run start --workspace=forum",
     "test": "npm test --workspace=forum"
+  },
+  "engines": {
+    "node": ">=22 <23"
   }
 }
