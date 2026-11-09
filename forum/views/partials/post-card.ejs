@@ -4,12 +4,21 @@
     <time datetime="<%= post.created_at %>"><%= formatDate(post.created_at) %></time>
   </div>
   <h3><a href="/publicaciones/<%= post.id %>"><%= post.title %></a></h3>
-  <p class="post-excerpt"><%= post.content.length > 180 ? post.content.slice(0, 180) + '…' : post.content %></p>
+  <% const postExcerpt = richContentToText(post.content); %>
+  <p class="post-excerpt"><%= postExcerpt.length > 180 ? postExcerpt.slice(0, 180) + '…' : postExcerpt %></p>
+  <% if (post.preview_image) { %>
+    <a class="post-card-preview" href="/publicaciones/<%= post.id %>" aria-label="Ver imagen adjunta en <%= post.title %>">
+      <img src="<%= post.preview_image %>" alt="Imagen adjunta a <%= post.title %>" loading="lazy">
+    </a>
+  <% } %>
   <div class="post-meta">
     <a class="member-link" href="/perfil/<%= encodeURIComponent(post.username) %>">
       <% if (post.avatar) { %><img class="avatar avatar-tiny" src="<%= post.avatar %>" alt=""><% } else { %><span class="avatar avatar-tiny avatar-initial"><%= post.username.slice(0, 1).toUpperCase() %></span><% } %>
-      <%= post.username %>
+      <%= post.username %><%- include('role-badge', { role: post.role }) %>
     </a>
     <a class="comment-link" href="/publicaciones/<%= post.id %>#comentarios">◌ <%= post.comment_count %> respuestas</a>
   </div>
+  <a class="post-card-open" href="/publicaciones/<%= post.id %>">Ver publicación <span aria-hidden="true">→</span>
+    <% if (post.attachment_count) { %><small><%= post.attachment_count %> archivo<%= post.attachment_count === 1 ? '' : 's' %></small><% } %>
+  </a>
 </article>

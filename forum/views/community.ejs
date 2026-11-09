@@ -11,7 +11,7 @@
     <div class="member-grid"><% members.forEach((member) => { %>
       <a class="member-card" href="/perfil/<%= encodeURIComponent(member.username) %>">
         <% if (member.avatar) { %><img class="avatar avatar-large" src="<%= member.avatar %>" alt=""><% } else { %><span class="avatar avatar-large avatar-initial"><%= member.username.slice(0, 1).toUpperCase() %></span><% } %>
-        <strong><%= member.username %></strong><small><%= member.post_count %> publicaciones</small><span class="member-bio"><%= member.bio || 'Miembro de ZONA GAMERS' %></span>
+        <strong><%= member.username %> <%- include('partials/role-badge', { role: member.role }) %></strong><small><%= member.post_count %> publicaciones</small><span class="member-bio"><%= member.bio || 'Miembro de ZONA GAMERS' %></span>
       </a>
     <% }) %></div>
   <% } else { %><div class="empty-state"><h3>Tu comunidad te espera</h3><p>Aún no hay miembros registrados. Puedes ser el primero.</p><a class="button button-small" href="/registro">Crear cuenta</a></div><% } %>

@@ -22,3 +22,4 @@ Thumbs.db
 forum/database/*.db
 forum/database/*.db-shm
 forum/database/*.db-wal
+forum/uploads/

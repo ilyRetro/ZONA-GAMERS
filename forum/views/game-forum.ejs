@@ -1,0 +1,54 @@
+<%- include('partials/header') %>
+<section class="game-forum-hero">
+  <img class="game-forum-hero-image" src="<%= game.image %>" alt="" aria-hidden="true">
+  <div class="game-forum-hero-content">
+    <a class="back-link game-forum-back-link" href="/">← Volver al selector de juegos</a>
+    <h1><%= game.name %></h1>
+    <p><%= game.description %></p>
+    <% if (currentUser) { %>
+      <a class="button button-small" href="/publicaciones/nueva?juego=<%= game.slug %>">＋ Nueva publicación</a>
+    <% } else { %>
+      <a class="button button-small" href="/login">Inicia sesión para publicar</a>
+    <% } %>
+  </div>
+</section>
+
+<section class="section game-forum-layout">
+  <%- include('partials/online-members', { onlineMembers }) %>
+  <div class="game-forum-main">
+    <section class="game-forum-section">
+      <div class="section-heading">
+        <div><span class="eyebrow"><span></span> CONVERSACIONES DE <%= game.name %></span><h2>Publicaciones recientes</h2></div>
+      </div>
+      <% if (posts.length) { %>
+        <div class="post-grid"><% posts.forEach((post) => { %><%- include('partials/post-card', { post }) %><% }) %></div>
+      <% } else { %>
+        <div class="game-forum-empty">
+          <span class="eyebrow"><span></span> EL FORO ESTÁ LISTO</span>
+          <h3>Aún no hay publicaciones</h3>
+          <p>Sé el primero en iniciar una conversación sobre <%= game.name %>.</p>
+          <% if (currentUser) { %>
+            <a class="button button-small" href="/publicaciones/nueva?juego=<%= game.slug %>">Crear la primera publicación</a>
+          <% } else { %>
+            <a class="button button-small" href="/login">Inicia sesión para publicar</a>
+          <% } %>
+        </div>
+      <% } %>
+    </section>
+
+    <section class="game-forum-section game-faq-section">
+      <div class="section-heading">
+        <div><span class="eyebrow"><span></span> GUÍA DE LA COMUNIDAD</span><h2>Preguntas frecuentes</h2></div>
+      </div>
+      <div class="game-faq-list">
+        <% game.faqs.forEach((faq) => { %>
+          <details class="game-faq">
+            <summary><%= faq.question %></summary>
+            <p><%= faq.answer %></p>
+          </details>
+        <% }) %>
+      </div>
+    </section>
+  </div>
+</section>
+<%- include('partials/footer') %>

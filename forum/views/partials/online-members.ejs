@@ -1,0 +1,24 @@
+<aside class="online-panel" data-online-members>
+  <div class="online-panel-heading">
+    <span class="online-live-indicator" aria-hidden="true"></span>
+    <h2>MIEMBROS EN LÍNEA</h2>
+  </div>
+  <ul class="online-members-list" data-online-list>
+    <% onlineMembers.forEach((member) => { %>
+      <li class="online-member" data-online-user-id="<%= member.id %>">
+        <a href="/perfil/<%= encodeURIComponent(member.username) %>">
+          <% if (member.avatar) { %>
+            <img class="avatar avatar-small" src="<%= member.avatar %>" alt="">
+          <% } else { %>
+            <span class="avatar avatar-small avatar-initial"><%= member.username.slice(0, 1).toUpperCase() %></span>
+          <% } %>
+          <span class="online-member-name"><%= member.username %></span>
+          <%- include('role-badge', { role: member.role }) %>
+          <span class="online-member-dot" aria-label="En línea"></span>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+  <p class="online-empty" data-online-empty <%= onlineMembers.length ? 'hidden' : '' %>>No hay miembros en línea por ahora.</p>
+  <p class="online-status" data-online-status aria-live="polite" hidden></p>
+</aside>

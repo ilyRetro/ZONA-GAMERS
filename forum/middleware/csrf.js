@@ -7,10 +7,15 @@ function csrfProtection(req, res, next) {
     return next();
   }
 
-  const submitted = req.body?._csrf;
+  const submitted = req.body?._csrf || req.get('x-csrf-token');
   const expected = req.session.csrfToken;
   if (typeof submitted !== 'string' || submitted.length !== expected.length ||
       !crypto.timingSafeEqual(Buffer.from(submitted), Buffer.from(expected))) {
+    if (req.get('accept')?.includes('application/json')) {
+      return res.status(403).json({
+        error: 'No pudimos verificar esta solicitud. Recarga la página e inténtalo de nuevo.'
+      });
+    }
     return res.status(403).render('error', {
       title: 'Solicitud no válida',
       statusCode: 403,

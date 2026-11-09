@@ -1,15 +1,15 @@
 <%- include('partials/header') %>
-<section class="auth-wrap">
-  <div class="auth-aside"><span class="eyebrow"><span></span> TU PRÓXIMA RUTA TE ESPERA</span><h1>Hazte parte<br>de la <strong>comunidad.</strong></h1><p>Crea tu cuenta para compartir tus historias, descubrir nuevos mods y encontrar compañeros de convoy.</p><div class="auth-aside-mark">ZG<span>.</span></div></div>
+<section class="auth-wrap auth-register">
+  <div class="auth-aside"><span class="eyebrow"><span></span> TU PRÓXIMA RUTA TE ESPERA</span><h1>Encuentra<br>tu <strong>camino.</strong></h1><p>Crea tu cuenta y encuentra compañeros de convoy, descubre mods y comparte tus historias por las carreteras de América.</p><div class="auth-route-mark" aria-hidden="true"><span>US</span><i></i><b></b></div></div>
   <div class="auth-card"><span class="eyebrow"><span></span> REGISTRO</span><h2>Crear cuenta</h2><p class="muted-copy">Únete gratis a ZONA GAMERS.</p>
-    <form action="/registro" method="post" class="form-stack">
+    <form action="/registro" method="post" class="form-stack auth-form" data-auth-form>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <label>Nombre de usuario<input name="username" type="text" minlength="3" maxlength="24" autocomplete="username" required pattern="[\p{L}\p{N}_-]{3,24}" title="Usa entre 3 y 24 letras, números, guiones o guiones bajos."></label>
-      <label>Correo electrónico<input name="email" type="email" maxlength="254" autocomplete="email" required></label>
-      <label>Contraseña<input name="password" type="password" minlength="10" maxlength="72" autocomplete="new-password" required><small>Al menos 10 caracteres y máximo 72 bytes.</small></label>
-      <label>Confirmar contraseña<input name="confirm_password" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label>
+      <label>Nombre de usuario<input name="username" type="text" minlength="3" maxlength="24" autocomplete="username" placeholder="Ej. RutaAmericana" required pattern="[\p{L}\p{N}_\-]{3,24}" title="Usa entre 3 y 24 letras, números, guiones o guiones bajos."></label>
+      <label>Correo electrónico<input name="email" type="email" maxlength="254" autocomplete="email" placeholder="tu@email.com" required></label>
+      <label>Contraseña<span class="password-control"><input name="password" type="password" minlength="10" maxlength="72" autocomplete="new-password" placeholder="Crea una contraseña segura" required><button type="button" class="password-toggle" aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button></span><small>Al menos 10 caracteres y máximo 72 bytes.</small></label>
+      <label>Confirmar contraseña<span class="password-control"><input name="confirm_password" type="password" minlength="10" maxlength="72" autocomplete="new-password" placeholder="Repite tu contraseña" required><button type="button" class="password-toggle" aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button></span></label>
       <label class="checkbox-label"><input type="checkbox" name="accept_rules" required><span>Acepto las normas de respeto y convivencia de la comunidad.</span></label>
-      <button class="button form-submit" type="submit">Crear mi cuenta <span>→</span></button>
+      <button class="button form-submit" type="submit"><span class="submit-label">Crear mi cuenta</span><span aria-hidden="true">→</span></button>
     </form>
     <p class="form-switch">¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a></p>
   </div>

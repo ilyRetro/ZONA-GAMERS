@@ -2,42 +2,57 @@
 <section class="home-hero">
   <div class="hero-shade"></div>
   <div class="hero-content">
-    <span class="eyebrow"><span></span> TRUCKERS LATINOAMÉRICA</span>
     <h1>Tu próxima ruta<br>comienza <strong>aquí.</strong></h1>
     <p>Un punto de encuentro para quienes viven la carretera. Comparte rutas, mods, convoyes y todo lo que hace grande a la simulación.</p>
-    <div class="hero-actions">
-      <a class="button" href="/foros">Explorar foros <span aria-hidden="true">→</span></a>
-      <% if (currentUser) { %><a class="button button-outline" href="/publicaciones/nueva">Crear publicación</a><% } else { %><a class="button button-outline" href="/registro">Unirme a la comunidad</a><% } %>
-    </div>
-    <div class="hero-stats">
-      <div><strong><%= stats.users %></strong><span>miembros</span></div>
-      <div><strong><%= stats.posts %></strong><span>publicaciones</span></div>
-      <div><strong><%= stats.online %></strong><span>en línea</span></div>
+    <div class="discord-panel">
+      <div class="discord-intro">
+        <img class="discord-mark discord-server-icon" data-discord-icon alt="" hidden>
+        <span><strong>ZONA GAMERS DISCORD</strong><small>Únete para conocer toda esta comunidad gamer.</small></span>
+        <span class="discord-live"><i></i> EN VIVO</span>
+      </div>
+      <div class="hero-stats discord-stats" data-discord-stats aria-live="polite">
+        <div><strong data-discord-members>—</strong><span>miembros Discord</span></div>
+        <div><strong data-discord-online>—</strong><span>conectados ahora</span></div>
+        <small class="discord-disclaimer" data-discord-status>Consultando Discord…</small>
+      </div>
+      <a class="button discord-join" href="https://discord.gg/4PCc3c7YtY" target="_blank" rel="noopener noreferrer">Unirme al servidor <span aria-hidden="true">↗</span></a>
+      <div class="discord-widget">
+        <iframe title="Widget oficial del servidor ZONA GAMERS en Discord" src="https://discord.com/widget?id=1340227657757098034&amp;theme=dark" width="100%" height="180" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+      </div>
     </div>
   </div>
-  <div class="hero-caption"><span class="online-pulse"></span> COMUNIDAD EN RUTA</div>
 </section>
 
-<section class="section page-section">
-  <div class="section-heading">
-    <div><span class="eyebrow"><span></span> CONVERSACIONES RECIENTES</span><h2>Últimas publicaciones</h2></div>
-    <a class="text-link" href="/foros">Ver todos los foros <span>→</span></a>
+<section class="games-section">
+  <div class="section games-section-inner">
+    <header class="games-heading">
+      <h2>RECUERDA QUE TENEMOS SERVIDORES EN ESTOS JUEGOS</h2>
+      <p>Escoge en qué juego quieres publicar tus preguntas y saber cómo jugar en alguno de nuestros servidores</p>
+    </header>
+    <div class="game-grid">
+      <% gameCards.forEach((game) => { %>
+        <% if (game.slug) { %>
+          <a class="game-card" href="/juegos/<%= game.slug %>">
+            <span class="game-cover">
+              <img src="<%= game.image %>" alt="<%= game.name %>" loading="lazy">
+              <span class="game-cover-shade"></span>
+            </span>
+            <span class="game-card-content">
+              <strong><%= game.name %></strong>
+              <small><%= game.description %></small>
+            </span>
+          </a>
+        <% } else { %>
+          <article class="game-card game-card-coming <%= game.style %>" aria-disabled="true">
+            <span class="game-coming-cover" aria-hidden="true"></span>
+            <span class="game-card-content">
+              <strong><%= game.name %></strong>
+              <small>Estamos preparando este espacio para la comunidad.</small>
+            </span>
+          </article>
+        <% } %>
+      <% }) %>
+    </div>
   </div>
-  <% if (recentPosts.length) { %>
-    <div class="post-grid"><% recentPosts.forEach((post) => { %><%- include('partials/post-card', { post }) %><% }) %></div>
-  <% } else { %>
-    <div class="empty-state"><span class="empty-icon">✦</span><h3>La carretera está despejada</h3><p>Sé el primero en iniciar una conversación con la comunidad.</p><% if (currentUser) { %><a class="button button-small" href="/publicaciones/nueva">Crear publicación</a><% } else { %><a class="button button-small" href="/registro">Únete y publica</a><% } %></div>
-  <% } %>
-</section>
-
-<section class="section activity-section">
-  <div class="section-heading"><div><span class="eyebrow"><span></span> EN MOVIMIENTO</span><h2>Actividad reciente</h2></div></div>
-  <% if (activity.length) { %>
-    <div class="activity-list"><% activity.forEach((item) => { %>
-      <a class="activity-item" href="/publicaciones/<%= item.post_id %>#comentarios">
-        <span class="activity-icon">↳</span><span><strong><%= item.username %></strong> respondió en <strong><%= item.title %></strong><small><%= item.content.length > 100 ? item.content.slice(0, 100) + '…' : item.content %></small></span><time><%= formatDate(item.created_at) %></time>
-      </a>
-    <% }) %></div>
-  <% } else { %><p class="muted-copy">Todavía no hay actividad. Las nuevas respuestas aparecerán aquí.</p><% } %>
 </section>
 <%- include('partials/footer') %>

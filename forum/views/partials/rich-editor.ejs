@@ -1,0 +1,70 @@
+<div class="rich-editor" data-rich-editor>
+  <div class="editor-toolbar" role="toolbar" aria-label="Herramientas de formato">
+    <div class="editor-tool-group">
+      <button type="button" data-command="bold" aria-label="Negrita" aria-pressed="false"><strong>B</strong></button>
+      <button type="button" data-command="italic" aria-label="Cursiva" aria-pressed="false"><em>I</em></button>
+      <button type="button" data-command="underline" aria-label="Subrayado" aria-pressed="false"><u>U</u></button>
+      <button type="button" data-command="strikeThrough" aria-label="Tachado" aria-pressed="false"><s>S</s></button>
+    </div>
+    <div class="editor-tool-group">
+      <select data-block-format aria-label="Formato de párrafo">
+        <option value="p">Texto</option>
+        <option value="h2">Encabezado</option>
+        <option value="h3">Subencabezado</option>
+        <option value="blockquote">Cita</option>
+      </select>
+      <select data-font-size aria-label="Tamaño del texto">
+        <option value="12px">12 px</option>
+        <option value="14px">14 px</option>
+        <option value="16px" selected>16 px</option>
+        <option value="18px">18 px</option>
+        <option value="24px">24 px</option>
+        <option value="32px">32 px</option>
+      </select>
+      <label class="editor-color" aria-label="Color del texto">A<input type="color" data-text-color value="#f5f7fb" aria-label="Color del texto"></label>
+    </div>
+    <div class="editor-tool-group">
+      <button type="button" data-command="justifyLeft" aria-label="Alinear a la izquierda" aria-pressed="false">☰</button>
+      <button type="button" data-command="justifyCenter" aria-label="Centrar" aria-pressed="false">≡</button>
+      <button type="button" data-command="justifyRight" aria-label="Alinear a la derecha" aria-pressed="false">☷</button>
+      <button type="button" data-command="justifyFull" aria-label="Justificar" aria-pressed="false">▤</button>
+    </div>
+    <div class="editor-tool-group">
+      <button type="button" data-command="insertUnorderedList" aria-label="Lista con viñetas" aria-pressed="false">• Lista</button>
+      <button type="button" data-command="insertOrderedList" aria-label="Lista numerada" aria-pressed="false">1. Lista</button>
+      <button type="button" data-insert-link aria-label="Insertar enlace">↗ Enlace</button>
+      <button type="button" data-upload-image aria-label="Adjuntar imagen">▧ Imagen</button>
+      <button type="button" data-upload-video aria-label="Adjuntar video">▶ Video</button>
+      <button type="button" data-insert-video-link aria-label="Insertar enlace de video">▶ Enlace de video</button>
+    </div>
+  </div>
+  <div class="editor-attachment-tray" data-attachment-tray aria-label="Archivos adjuntos" hidden>
+    <div class="editor-attachment-list" data-attachment-list></div>
+  </div>
+  <input type="hidden" name="attachments" value="[]" data-editor-attachments>
+  <div id="<%= editorId %>" class="rich-editor-canvas" contenteditable="true" role="textbox" aria-multiline="true" aria-label="<%= editorLabel %>" data-editor-canvas></div>
+  <input type="hidden" name="content" data-editor-content>
+  <input class="editor-file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" data-image-input aria-label="Seleccionar imagen" multiple>
+  <input class="editor-file-input" type="file" accept="video/mp4,video/webm" data-video-input aria-label="Seleccionar video">
+  <div class="editor-status" aria-live="polite" data-editor-status></div>
+  <dialog class="editor-link-dialog" data-link-dialog aria-labelledby="<%= editorId %>-link-title">
+    <div class="editor-dialog-form">
+      <h3 id="<%= editorId %>-link-title">Insertar enlace</h3>
+      <label>Dirección del enlace<input type="text" inputmode="url" autocomplete="url" data-link-dialog-input></label>
+      <div class="editor-dialog-actions">
+        <button type="button" class="button button-quiet" data-dialog-cancel>Cancelar</button>
+        <button type="button" class="button button-small" data-dialog-submit>Insertar enlace</button>
+      </div>
+    </div>
+  </dialog>
+  <dialog class="editor-link-dialog" data-video-dialog aria-labelledby="<%= editorId %>-video-title">
+    <div class="editor-dialog-form">
+      <h3 id="<%= editorId %>-video-title">Insertar video</h3>
+      <label>Enlace de YouTube o Vimeo<input type="text" inputmode="url" autocomplete="url" data-video-dialog-input></label>
+      <div class="editor-dialog-actions">
+        <button type="button" class="button button-quiet" data-dialog-cancel>Cancelar</button>
+        <button type="button" class="button button-small" data-dialog-submit>Insertar video</button>
+      </div>
+    </div>
+  </dialog>
+</div>

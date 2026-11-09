@@ -26,10 +26,9 @@
     <nav class="main-nav" aria-label="Navegación principal">
       <a href="/" class="<%= pageTitle === 'Inicio' ? 'active' : '' %>">Inicio</a>
       <a href="/foros" class="<%= pageTitle === 'Foros' ? 'active' : '' %>">Foros</a>
-      <a href="/comunidad" class="<%= pageTitle === 'Comunidad' ? 'active' : '' %>">Comunidad</a>
       <% if (viewer) { %>
         <a class="nav-user" href="/perfil/<%= encodeURIComponent(viewer.username) %>">
-          <% if (viewer.avatar) { %><img class="avatar avatar-small" src="<%= viewer.avatar %>" alt=""><% } else { %><span class="avatar avatar-small avatar-initial"><%= viewer.username.slice(0, 1).toUpperCase() %></span><% } %>
+          <% if (viewer.avatar) { %><img class="avatar avatar-small" src="<%= viewer.avatar %>" alt="" data-nav-avatar><% } else { %><span class="avatar avatar-small avatar-initial" data-nav-avatar><%= viewer.username.slice(0, 1).toUpperCase() %></span><% } %>
           <span><%= viewer.username %></span>
         </a>
         <form class="nav-logout" action="/logout" method="post">

@@ -1,14 +1,14 @@
 <%- include('partials/header') %>
-<section class="auth-wrap">
-  <div class="auth-aside"><span class="eyebrow"><span></span> BUENO TENERTE DE VUELTA</span><h1>La carretera<br>te <strong>llama.</strong></h1><p>Inicia sesión para continuar la conversación y compartir kilómetros con la comunidad.</p><div class="auth-aside-mark">ZG<span>.</span></div></div>
+<section class="auth-wrap auth-login">
+  <div class="auth-aside"><span class="eyebrow"><span></span> BUENO TENERTE DE VUELTA</span><h1>La carretera<br>te <strong>llama.</strong></h1><p>Vuelve a la ruta. Continúa compartiendo kilómetros, mods y convoyes con la comunidad.</p></div>
   <div class="auth-card"><span class="eyebrow"><span></span> ACCESO A LA COMUNIDAD</span><h2>Iniciar sesión</h2><p class="muted-copy">Ingresa con tu usuario o correo electrónico.</p>
-    <form action="/login" method="post" class="form-stack">
+    <form action="/login" method="post" class="form-stack auth-form" data-auth-form>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <label>Usuario o correo electrónico<input name="identity" type="text" autocomplete="username" required autofocus></label>
-      <label>Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
-      <button class="button form-submit" type="submit">Entrar a mi cuenta <span>→</span></button>
+      <label>Usuario o correo electrónico<input name="identity" type="text" autocomplete="username" placeholder="Tu usuario o correo" required autofocus></label>
+      <label>Contraseña<span class="password-control"><input name="password" type="password" autocomplete="current-password" placeholder="Tu contraseña" required><button type="button" class="password-toggle" aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button></span></label>
+      <button class="button form-submit" type="submit"><span class="submit-label">Entrar a mi cuenta</span><span aria-hidden="true">→</span></button>
     </form>
-    <p class="form-switch">¿Todavía no tienes cuenta? <a href="/registro">Regístrate gratis</a></p>
+    <p class="form-switch">¿Todavía no tienes cuenta? <a href="/registro">Únete a la ruta</a></p>
   </div>
 </section>
 <%- include('partials/footer') %>

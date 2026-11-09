@@ -1,15 +1,74 @@
 <%- include('partials/header') %>
-<section class="section form-page">
+<section class="section profile-settings">
   <a class="back-link" href="/perfil/<%= encodeURIComponent(user.username) %>">← Volver a mi perfil</a>
-  <div class="form-panel"><span class="eyebrow"><span></span> PERSONALIZA TU ESPACIO</span><h1>Editar perfil</h1><p class="muted-copy">Cuéntale a la comunidad un poco sobre ti.</p>
-    <form action="/perfil/editar" method="post" class="form-stack">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <label>Nombre de usuario<input type="text" value="<%= user.username %>" disabled></label>
-      <label>Correo electrónico<input type="email" value="<%= user.email %>" disabled></label>
-      <label>Biografía<textarea name="bio" rows="5" maxlength="500" placeholder="¿Qué te gusta conducir?"><%= user.bio || '' %></textarea><small>Hasta 500 caracteres.</small></label>
-      <label>Avatar (URL HTTPS)<input name="avatar" type="url" maxlength="500" value="<%= user.avatar || '' %>" placeholder="https://ejemplo.com/mi-avatar.jpg"><small>Deja vacío para mostrar la inicial de tu usuario.</small></label>
-      <button class="button form-submit" type="submit">Guardar cambios <span>→</span></button>
-    </form>
+  <div class="profile-settings-heading"><span class="eyebrow"><span></span> PERSONALIZA TU ESPACIO</span><h1>Editar perfil</h1><p>Administra tu información, tu seguridad y cómo te ve la comunidad.</p></div>
+  <section class="profile-settings-card">
+    <h2>Foto de perfil</h2>
+    <div class="avatar-settings">
+      <% if (user.avatar) { %><img class="avatar avatar-profile" src="<%= user.avatar %>" alt="Vista previa del avatar" data-avatar-preview><% } else { %><span class="avatar avatar-profile avatar-initial" data-avatar-preview><%= user.username.slice(0, 1).toUpperCase() %></span><% } %>
+      <form class="avatar-upload-form" action="/perfil/avatar" method="post" enctype="multipart/form-data" data-avatar-form>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label>Selecciona una fotografía<input type="file" name="avatar" accept=".jpg,.jpeg,.png,.webp,.gif,.heic,.heif,image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif" data-avatar-input><small>JPG, JPEG, PNG, WebP, GIF, HEIC o HEIF. Máximo 20 MB.</small></label>
+        <button class="button button-small" type="submit" data-avatar-save disabled>Guardar avatar</button>
+        <button class="button button-quiet button-small" type="button" data-avatar-remove <%= user.avatar ? '' : 'disabled' %>>Eliminar avatar</button>
+        <span class="form-feedback" aria-live="polite"></span>
+      </form>
+    </div>
+  </section>
+  <div class="avatar-crop-modal" data-avatar-crop-modal hidden>
+    <section class="avatar-crop-dialog" role="dialog" aria-modal="true" aria-labelledby="avatar-crop-title">
+      <button class="avatar-crop-close" type="button" aria-label="Cancelar recorte" data-avatar-crop-cancel>×</button>
+      <h2 id="avatar-crop-title">Ajusta tu foto</h2>
+      <p>Arrastra la fotografía para elegir el encuadre y usa los controles para acercar o alejar.</p>
+      <div class="avatar-crop-layout">
+        <div class="avatar-crop-stage" data-avatar-crop-stage><img alt="Recorte de avatar" draggable="false" data-avatar-crop-image></div>
+        <div class="avatar-crop-result"><canvas width="160" height="160" data-avatar-crop-preview></canvas><span>Vista del avatar</span></div>
+      </div>
+      <div class="avatar-crop-zoom">
+        <span>Zoom</span>
+        <div class="avatar-crop-zoom-controls">
+          <button type="button" class="button button-quiet button-small" aria-label="Reducir zoom" data-avatar-zoom-out>−</button>
+          <input type="range" min="1" max="3" step="0.01" value="1" aria-label="Nivel de zoom" data-avatar-crop-zoom>
+          <button type="button" class="button button-quiet button-small" aria-label="Ampliar zoom" data-avatar-zoom-in>+</button>
+        </div>
+      </div>
+      <div class="avatar-crop-actions">
+        <button class="button button-quiet button-small" type="button" data-avatar-crop-cancel>CANCELAR</button>
+        <button class="button button-small" type="button" data-avatar-crop-confirm>CONFIRMAR RECORTE</button>
+      </div>
+    </section>
   </div>
+  <form class="profile-settings-card profile-settings-form" action="/perfil/editar" method="post" data-async-form>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <h2>Biografía</h2>
+    <label>Cuéntale a la comunidad sobre ti<textarea name="bio" rows="4" maxlength="500" placeholder="¿Qué te gusta jugar?"><%= user.bio || '' %></textarea><small>Hasta 500 caracteres.</small></label>
+    <button class="button button-small" type="submit">Guardar biografía</button><span class="form-feedback" aria-live="polite"></span>
+  </form>
+  <form class="profile-settings-card profile-settings-form" action="/perfil/cambiar-nombre" method="post" data-async-form>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <h2>Nombre de usuario</h2>
+    <label>Nombre visible<input name="username" type="text" minlength="3" maxlength="24" pattern="[\p{L}\p{N}_\-]{3,24}" value="<%= user.username %>" required></label>
+    <% if (usernameChangeAvailableAt) { %><p class="profile-setting-note" data-username-available="<%= usernameChangeAvailableAt %>">Podrás volver a cambiarlo el <%= formatDateTime(usernameChangeAvailableAt) %>.</p><% } else { %><p class="profile-setting-note">El cambio estará disponible nuevamente 15 días después de guardarlo.</p><% } %>
+    <button class="button button-small" type="submit">Cambiar nombre</button><span class="form-feedback" aria-live="polite"></span>
+  </form>
+  <form class="profile-settings-card profile-settings-form" action="/perfil/cambiar-correo" method="post" data-async-form>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <h2>Correo electrónico</h2>
+    <label>Correo actual<input type="email" value="<%= user.email %>" disabled></label>
+    <label>Nuevo correo<input name="email" type="email" maxlength="254" autocomplete="email" required></label>
+    <label>Contraseña actual<input name="current_password" type="password" autocomplete="current-password" required></label>
+    <p class="profile-setting-note">El servidor no tiene un proveedor de correo configurado. La solicitud quedará pendiente y no cambiará tu correo hasta que sea verificado.</p>
+    <% if (pendingEmailChange) { %><p class="profile-setting-pending">Solicitud pendiente para <strong><%= pendingEmailChange.email %></strong> desde <%= formatDateTime(pendingEmailChange.requested_at) %>.</p><% } %>
+    <button class="button button-small" type="submit">Solicitar cambio</button><span class="form-feedback" aria-live="polite"></span>
+  </form>
+  <form class="profile-settings-card profile-settings-form" action="/perfil/cambiar-contrasena" method="post" data-async-form>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <h2>Contraseña</h2>
+    <label>Contraseña actual<input name="current_password" type="password" autocomplete="current-password" required></label>
+    <label>Nueva contraseña<input name="password" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label>
+    <label>Confirmar nueva contraseña<input name="confirm_password" type="password" minlength="10" maxlength="72" autocomplete="new-password" required></label>
+    <small>Al cambiarla se cerrarán las demás sesiones de tu cuenta.</small>
+    <button class="button button-small" type="submit">Actualizar contraseña</button><span class="form-feedback" aria-live="polite"></span>
+  </form>
 </section>
 <%- include('partials/footer') %>

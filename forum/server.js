@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const crypto = require('crypto');
+const fs = require('fs');
 const helmet = require('helmet');
 const session = require('express-session');
 const SQLiteStore = require('./database/session-store');
@@ -10,6 +11,10 @@ const db = require('./database/connection');
 const authRoutes = require('./routes/auth');
 const forumRoutes = require('./routes/forum');
 const profileRoutes = require('./routes/profile');
+const { getDiscordStats } = require('./services/discord');
+const { richContentToText, sanitizeRichContent } = require('./services/rich-content');
+const { uploadsDirectory } = require('./services/media');
+const { roleLabels } = require('./services/roles');
 const { csrfProtection } = require('./middleware/csrf');
 
 const app = express();
@@ -65,21 +70,35 @@ app.locals.formatDate = (date) => {
     ? ''
     : new Intl.DateTimeFormat('es', { dateStyle: 'medium' }).format(parsedDate);
 };
+app.locals.formatDateTime = (date) => {
+  const parsedDate = new Date(date);
+  return Number.isNaN(parsedDate.getTime())
+    ? ''
+    : new Intl.DateTimeFormat('es', { dateStyle: 'medium', timeStyle: 'short' }).format(parsedDate);
+};
+app.locals.richContentToText = richContentToText;
+app.locals.sanitizeRichContent = sanitizeRichContent;
+app.locals.roleLabels = roleLabels;
+fs.mkdirSync(uploadsDirectory, { recursive: true });
 
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      imgSrc: ["'self'", 'data:', 'https:'],
+      imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
       styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+      styleSrcAttr: ["'unsafe-inline'"],
       fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+      frameSrc: ['https://discord.com', 'https://www.youtube-nocookie.com', 'https://player.vimeo.com'],
+      mediaSrc: ["'self'"],
+      connectSrc: ["'self'", 'https://discord.com'],
       formAction: ["'self'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"]
     }
   }
 }));
-app.use(express.urlencoded({ extended: false, limit: '32kb' }));
+app.use(express.urlencoded({ extended: false, limit: '400kb' }));
 app.use(express.json({ limit: '32kb' }));
 app.use(session({
   name: 'zona.sid',
@@ -94,6 +113,30 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }));
+const getSessionUser = db.prepare('SELECT id, username, email, avatar, role FROM users WHERE id = ?');
+const updateSessionActivity = db.prepare('UPDATE sessions SET last_seen = ? WHERE sid = ?');
+app.use((req, res, next) => {
+  if (Number.isSafeInteger(req.session?.user?.id)) {
+    const account = getSessionUser.get(req.session.user.id);
+    if (!account) {
+      req.session.user = null;
+    } else {
+      for (const [field, value] of Object.entries(account)) {
+        if (req.session.user[field] !== value) req.session.user[field] = value;
+      }
+      updateSessionActivity.run(Date.now(), req.sessionID);
+    }
+  }
+  next();
+});
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
+app.use('/uploads', express.static(uploadsDirectory, {
+  dotfiles: 'deny',
+  index: false,
+  setHeaders: (res) => res.setHeader('X-Content-Type-Options', 'nosniff')
+}));
+app.use(csrfProtection);
 app.use((req, res, next) => {
   res.locals.currentUser = req.session?.user || null;
   res.locals.csrfToken = req.session?.csrfToken || '';
@@ -103,11 +146,16 @@ app.use((req, res, next) => {
   res.locals.error = typeof req.query.error === 'string' ? req.query.error : '';
   next();
 });
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
-app.use(csrfProtection);
 
 app.use('/', authRoutes);
+app.get('/api/discord/stats', async (req, res, next) => {
+  try {
+    res.set('Cache-Control', 'no-store');
+    res.json(await getDiscordStats());
+  } catch (error) {
+    next(error);
+  }
+});
 app.use('/', forumRoutes);
 app.use('/', profileRoutes);
 
@@ -120,7 +168,7 @@ app.use((req, res) => {
 });
 
 app.use((error, req, res, next) => {
-  console.error(error);
+  console.error('Unhandled error for %s %s:\n%s', req.method, req.path, error.stack || error);
   if (res.headersSent) return next(error);
   const statusCode = Number.isInteger(error.status) && error.status >= 400 && error.status < 500
     ? error.status
@@ -130,6 +178,9 @@ app.use((error, req, res, next) => {
     : statusCode === 400
       ? 'La solicitud contiene datos no válidos.'
       : 'Ocurrió un error inesperado. Inténtalo de nuevo.';
+  if (req.get('accept')?.includes('application/json')) {
+    return res.status(statusCode).json({ error: message });
+  }
   res.status(statusCode).render('error', {
     title: statusCode === 500 ? 'Error del servidor' : 'Solicitud no válida',
     statusCode,
